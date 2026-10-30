@@ -951,3 +951,9 @@ button, a[role="button"], [data-sfx] {
 /* Transparent body when gaming bg is active */
 html.gaming-bg { background: transparent !important; }
 body.gaming-bg { background: transparent !important; }
+
+/* Zero-flicker loading screen rule for repeat visits */
+html.pv-loader-seen .pv-loader-overlay {
+  display: none !important;
+}
+

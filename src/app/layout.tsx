@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from 'next';
 import './globals.css';
 import { LayoutShell } from '@/components/layout/LayoutShell';
+import { LoadingScreen } from '@/components/LoadingScreen';
 
 export const viewport: Viewport = {
   themeColor: '#06070b',
@@ -44,6 +45,20 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark">
       <head>
+        {/* Zero-flicker loader prevention for repeat visits & reduced motion */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              try {
+                var s = window.location.search;
+                var isForce = s.indexOf('loader=') !== -1 || s.indexOf('preview_loader=') !== -1;
+                if (!isForce && (sessionStorage.getItem('pixelverse_loader_shown') === 'true' || (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches))) {
+                  document.documentElement.classList.add('pv-loader-seen');
+                }
+              } catch(e) {}
+            `,
+          }}
+        />
         {/* Outfit (punchy gaming display) + Plus Jakarta Sans + Figtree (smooth body) + Noto for Hindi and Bengali */}
         <link rel="preconnect" href="https://img.gamepix.com" crossOrigin="anonymous" />
         <link rel="dns-prefetch" href="https://play.gamepix.com" />
@@ -55,6 +70,7 @@ export default function RootLayout({
         />
       </head>
       <body className="antialiased font-sans">
+        <LoadingScreen />
         <LayoutShell>{children}</LayoutShell>
       </body>
     </html>
